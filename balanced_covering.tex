@@ -1,0 +1,167 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+\newtheorem{question}{Question}
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+
+\title{A Balanced Covering Pair of Size $\sqrt{n}$ and Polynomial Magnitude:\\
+Resolving a Difference-Set Question for the Smoothness Covering Decomposition}
+\author{Eric Schultz \qquad Claude (Anthropic)}
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A companion note to the Smoothness Covering Decomposition showed how to cover $[1,n]$ by
+divisibility with a set $D$ of size $\pi(n)(1+o(1))$ and elements of magnitude
+$\exp(O(\sqrt n))$, and asked (Remark~3 there) for the least $K$ such that a
+\emph{balanced} pair $(S,T)$ with $\abs{S}=\abs{T}=K$ covers $[1,n]$ by nonzero
+differences --- every $i\le n$ dividing some $s-t$ with $s\in S$, $t\in T$, $s\ne t$. That
+remark cautioned the balanced realization looked infeasible for $K\ll\abs{D}$. We show the
+opposite: an elementary two-scale grid gives a balanced pair with
+$K=\lceil\sqrt{n+1}\,\rceil=(1+o(1))\sqrt n$ and all elements of magnitude at most
+$n+O(\sqrt n)$. This improves the trivial realization simultaneously on \emph{both} axes
+--- size $\sqrt n$ versus $\pi(n)$, and magnitude $O(n)$ versus $\exp(O(\sqrt n))$. We also
+observe that minimizing $K$ alone is degenerate ($K=1$ via a single least-common-multiple
+element, at magnitude $\exp(O(n))$), so the meaningful object is the size--magnitude
+trade-off; the grid occupies one clean corner of it, and the shape of the full curve
+(in particular, any nontrivial lower bound on $K$ at polynomial magnitude) is left open.
+The finite claims were verified by direct enumeration. This note has not been externally
+refereed.
+\end{abstract}
+
+\section{Setup}
+
+We work with the divisibility-covering notion of the companion decomposition.
+
+\begin{definition}
+A pair of finite sets $S,T\subset\Z$ is a \emph{covering pair} for $[1,n]$ if for every
+integer $i$ with $1\le i\le n$ there exist $s\in S$, $t\in T$ with $s\ne t$ and
+$i\mid(s-t)$. It is \emph{balanced} if $\abs S=\abs T$; we write $K=\abs S=\abs T$. Its
+\emph{magnitude} is $\max\{\abs x : x\in S\cup T\}$.
+\end{definition}
+
+The nonzero requirement $s\ne t$ is essential: without it the difference $0$ is divisible
+by every $i$, and $S=T=\{0\}$ would ``cover'' $[1,n]$ vacuously. With it, the problem is
+the genuine one raised in Remark~3 of the companion note.
+
+The trivial realization $S=D$, $T=\{0\}$ from a covering set $D$ gives $K=\abs D$; for the
+decomposition's $D$ that is $\pi(n)(1+o(1))$ at magnitude $\exp(O(\sqrt n))$. Remark~3
+there worried that a balanced realization with $K\ll\abs D$ is obstructed, because
+prescribing the $\abs D$ specific values of $D$ as differences imposes $\abs D$ constraints
+on the $2K$ values of $S\cup T$. The resolution below is to abandon reproducing $D$'s
+specific values: a balanced pair need not realize $D$ at all, only cover $[1,n]$ afresh.
+
+\section{The construction}
+
+\begin{theorem}[Balanced covering pair]\label{thm:main}
+For every $n\ge1$ let $m=\lceil\sqrt{n+1}\,\rceil$ and set
+\[
+  S=\{0,1,2,\dots,m-1\},\qquad T=\{0,-m,-2m,\dots,-(m-1)m\}.
+\]
+Then $(S,T)$ is a balanced covering pair for $[1,n]$ with $K=m=(1+o(1))\sqrt n$ and
+magnitude $(m-1)m< n+O(\sqrt n)$.
+\end{theorem}
+
+\begin{proof}
+For $s=a\in S$ and $t=-bm\in T$ ($0\le a,b\le m-1$) the difference is
+$s-t=a+bm$. As $a$ ranges over $\{0,\dots,m-1\}$ and $b$ over $\{0,\dots,m-1\}$, the value
+$a+bm$ takes \emph{every} integer in $\{0,1,\dots,m^2-1\}$ exactly once (base-$m$
+representation). Since $m=\lceil\sqrt{n+1}\,\rceil$ gives $m^2\ge n+1$, the difference set
+$\{s-t\}$ contains $\{1,2,\dots,n\}$. Hence for each $i\le n$ the value $i$ itself is a
+nonzero difference, and trivially $i\mid i$; the pair covers $[1,n]$. Both sets have $m$
+elements, so $K=m=(1+o(1))\sqrt n$. The largest magnitude is $\abs{-(m-1)m}=(m-1)m$, and
+with $m<\sqrt{n+1}+1$ this is below $n+O(\sqrt n)$.
+\end{proof}
+
+\begin{remark}[Two-axis improvement]
+The pair of Theorem~\ref{thm:main} improves the trivial realization on both axes at once:
+size $\sqrt n$ against $\pi(n)\sim n/\ln n$, and magnitude $O(n)$ against the
+decomposition's $\exp(O(\sqrt n))$. It is therefore not merely a balanced substitute for
+$D$ but a strictly cheaper covering object in both parameters. The obstruction of Remark~3
+in the companion note does not bind because the construction never reproduces the specific
+elements of $D$; it covers $[1,n]$ directly through the $m^2$ differences of an
+$m\times m$ grid.
+\end{remark}
+
+\section{Minimizing $K$ alone is degenerate; the trade-off is the real object}
+
+\begin{proposition}\label{prop:lcm}
+For every $n$ the pair $S=\{0\}$, $T=\{\operatorname{lcm}(1,\dots,n)\}$ is a balanced
+covering pair for $[1,n]$ with $K=1$. Its magnitude is
+$\operatorname{lcm}(1,\dots,n)=\exp((1+o(1))n)$.
+\end{proposition}
+
+\begin{proof}
+The single nonzero difference is $-\operatorname{lcm}(1,\dots,n)$, which every $i\le n$
+divides. The magnitude estimate is the prime number theorem for the second Chebyshev
+function, $\log\operatorname{lcm}(1,\dots,n)=\psi(n)\sim n$.
+\end{proof}
+
+Thus the bare question ``least $K$'' has answer $1$ and is not the interesting one: the
+cost has simply migrated into magnitude, from $\exp(O(\sqrt n))$ up to $\exp(O(n))$. The
+meaningful object is the \emph{size--magnitude trade-off}: the least $K$ achievable subject
+to a magnitude bound $M$. Three points on this curve are now known:
+\[
+  \begin{array}{lll}
+    \text{(i)}   & K=1,          & M=\exp(O(n))       \quad\text{(Proposition~\ref{prop:lcm})};\\
+    \text{(ii)}  & K=\pi(n),     & M=\exp(O(\sqrt n)) \quad\text{(decomposition's }D\text{)};\\
+    \text{(iii)} & K=\sqrt n,    & M=O(n)             \quad\text{(Theorem~\ref{thm:main})}.
+  \end{array}
+\]
+Point (iii) dominates (ii) in both coordinates, so (ii) is not on the lower boundary of the
+trade-off. The genuinely open direction is the boundary near (iii):
+
+\begin{question}
+At polynomial magnitude $M=n^{O(1)}$, is $K=\Theta(\sqrt n)$ optimal, or can a balanced
+covering pair have $K=o(\sqrt n)$? Equivalently, is there a lower bound $K=\Omega(\sqrt n)$
+for covering pairs of polynomially bounded magnitude?
+\end{question}
+
+A lower bound here cannot come from a crude counting of differences alone: covering needs
+only a \emph{multiple} of each $i\le n$ among the $\le K^2$ differences, not $i$ itself, and
+the relaxation to multiples is what makes small-$n$ optima dip below $\lceil\sqrt n\rceil$
+(see Section~\ref{sec:verify}). Whether that relaxation buys an asymptotic improvement at
+polynomial magnitude, or is washed out, is what the question asks.
+
+\section{Verification}\label{sec:verify}
+
+The construction of Theorem~\ref{thm:main} was checked by direct enumeration: for
+$n\in\{16,100,1000,10^4\}$ the pair $(S,T)$ leaves no $i\le n$ uncovered, and the measured
+$K/\sqrt n$ is $1.25,1.10,1.01,1.01$ respectively, converging to $1$. The magnitudes
+$(m-1)m$ are $20,110,992,10100$ against $n=16,100,1000,10^4$, confirming the $O(n)$ bound.
+Proposition~\ref{prop:lcm} was checked for $n\le500$: the single element
+$\operatorname{lcm}(1,\dots,n)$ is divisible by every $i\le n$.
+
+Exhaustive minimum-$K$ search (nonzero differences, values bounded by $2n$) shows the
+multiple-relaxation genuinely dips below $\lceil\sqrt n\rceil$ at small $n$: the least $K$
+is $2$ up to $n=10$ and $3$ up to $n=20$, whereas $\lceil\sqrt n\rceil$ reaches $3$ already
+at $n=5$ and $4$ at $n=10$. For instance $S=\{0,2\},T=\{16,20\}$ covers $[1,10]$ with $K=2$
+(differences $\{-14,-16,-18,-20\}$, whose divisors include every $i\le10$). These are the
+data motivating the open question; they do not settle the asymptotic rate, since the search
+is exponential and was carried out only for $n\le24$.
+
+\section*{Acknowledgement of scope}
+The upper bound of Theorem~\ref{thm:main} is complete and elementary. The lower-bound side
+of the trade-off --- and hence the exact optimal $K$ at polynomial magnitude --- is not
+resolved here.
+
+\begin{thebibliography}{9}
+\bibitem{smooth} E. Schultz, \emph{A Smoothness Covering Decomposition: Covering $[1,n]$
+by Divisibility with One Dedicated Element per Large Prime Power}, 2026 (companion note;
+Remark~3 poses the balanced-pair question resolved here).
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,368 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+\newtheorem{example}{Example}
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+\DeclareMathOperator{\covol}{covol}
+
+\title{An Elementary, Self-Certifying Avoidance Lemma:\\
+Short Lattice Vectors off Bounded-Degree Varieties\\
+by Union Counting over a Coefficient Box}
+\author{Eric Schultz \qquad Claude (Anthropic)}
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We give a short, elementary proof that a lattice of covolume $U$ contains a nonzero
+vector of controlled $\ell^\infty$-norm avoiding the zero sets of finitely many
+polynomials of bounded degree, under the sole hypothesis that no polynomial vanishes
+identically on the lattice. The method is a union-bound count over an explicit
+integer box of basis coefficients: each degree-$\delta$ constraint kills at most
+$\delta(N+1)^{d-1}$ of the $(N+1)^d$ candidate coefficient tuples, so a box of side
+$N \gtrsim N_0\delta$ leaves a good tuple. The avoidance phenomenon itself is classical
+and effective versions are known through successive-minima machinery; our contribution
+is methodological. The argument needs only a single norm-bounded basis --- no
+well-roundedness, no control of higher successive minima, no reduction theory beyond
+Minkowski's second theorem --- and every constant it produces is a finite quantity
+verifiable by direct enumeration. We show the linear ($\delta=1$) case covers affine
+hyperplanes at no extra cost, that the through-origin hypothesis of the usual statement
+is never load-bearing, and that the degree factor $\delta$ is sharp: a product of
+$\delta$ parallel affine hyperplanes saturates the count exactly (a special case of the
+optimal degree dependence in Fukshansky~\cite{fuk2010}). All finite cores are
+confirmed by exhaustive enumeration. This note has not been externally refereed.
+\end{abstract}
+
+\section*{Provenance and priority}
+The results of this note are not new, and we make no claim to the contrary. The
+existence of a small-height point avoiding a union of varieties, with an explicit
+bound whose dependence on the height and on the degree of a containing hypersurface
+is \emph{optimal}, is a theorem of Fukshansky~\cite{fuk2010}, proved through Alon's
+Combinatorial Nullstellensatz~\cite{alon}. In particular, the sharpness of the degree
+factor recorded in our Proposition~\ref{prop:sharp} is a special case of that
+optimality, not a new observation. Effective lattice versions avoiding full-rank
+sublattices together with an algebraic hypersurface appear in
+Fukshansky--Jeong~\cite{fukjeong}, via Minkowski's successive minima. The
+vector-space ancestor --- a space over an infinite field is not a finite union of
+proper subspaces --- is the classical finite-union lemma.
+
+What this note offers is therefore not a theorem but a \emph{packaging}: a bare-hands
+union-bound count over an explicit integer box of basis coefficients, implementing by
+hand the ``a bounded-degree polynomial cannot vanish on a large enough grid'' idea that
+the Combinatorial Nullstellensatz supplies in polished form. Its only virtues over the
+cited literature are pedagogical and computational: it requires just one norm-bounded
+basis rather than control of all successive minima or a Nullstellensatz invocation, it
+drops the well-roundedness and through-origin assumptions found in some treatments, and
+it produces only finite, enumerable constants, so every core inequality can be --- and
+here is --- confirmed by direct enumeration. The price is real: the constants are crude,
+a factor of order $d$ off the successive-minima route and with none of the optimality of
+\cite{fuk2010}. This is a self-contained lemma to drop into an applied argument when a
+checkable existence certificate matters more than a sharp height, not a contribution to
+the avoidance literature.
+
+\section{Setup}
+
+Throughout, $L \subset \R^d$ is a lattice of rank $d \ge 2$ and covolume
+$U = \covol(L) > 0$. For $x \in \R^d$ we write $\norm{x}_\infty = \max_i \abs{x_i}$.
+
+\begin{lemma}[Bounded basis]\label{lem:basis}
+Every rank-$d$ lattice $L$ of covolume $U$ admits a basis $v_1,\dots,v_d$ with
+$\norm{v_i}_\infty \le C_1(d)\,U^{1/d}$ for all $i$, where $C_1(d)$ depends only on $d$.
+\end{lemma}
+
+\begin{proof}
+Minkowski's second theorem bounds the product of successive minima,
+$\lambda_1 \cdots \lambda_d \le 2^d U / V_d$, with $V_d$ the volume of the unit
+$\ell^\infty$ ball; classical reduction theory (Cassels~\cite{cassels}, Ch.~VIII)
+converts the successive minima into an actual basis bounded in terms of them.
+The crude bound $\norm{v_i}_\infty \le C_1(d)\,U^{1/d}$ suffices; we do not track the
+sharp constant.
+\end{proof}
+
+We will use only the following consequence of the basis: every element of the
+sublattice generated by short combinations is short. Concretely, for a coefficient
+vector $c = (c_1,\dots,c_d) \in \Z^d$ with $\norm{c}_\infty \le N$, the vector
+$v(c) = \sum_i c_i v_i$ satisfies $\norm{v(c)}_\infty \le d\,N\,C_1(d)\,U^{1/d}$.
+
+\section{The avoidance lemma}
+
+We first record the polynomial input, then state and prove the lemma.
+
+\begin{lemma}[Grid Schwartz--Zippel]\label{lem:sz}
+Let $g \in \R[x_1,\dots,x_d]$ have total degree $\le \delta$ and not vanish
+identically on $\Z^d$. Fix a nonzero linear map $c \mapsto v(c)$ from $\Z^d$ to
+$\R^d$ (given here by a lattice basis). If $g \circ v$ is not identically zero on
+$\{0,1,\dots,N\}^d$, then $g \circ v$ vanishes on at most $\delta (N+1)^{d-1}$ of
+those $(N+1)^d$ tuples.
+\end{lemma}
+
+\begin{proof}
+$g \circ v$ is a polynomial in $c_1,\dots,c_d$ of total degree $\le \delta$ (composition
+with the affine-linear $v$ does not raise degree). The bound is the standard
+Schwartz--Zippel estimate over the finite grid $\{0,\dots,N\}$ per coordinate,
+valid over any integral domain: induct on $d$; slice along $c_d$, where a nonzero
+univariate polynomial of degree $e \le \delta$ has at most $e$ roots in the grid,
+and apply the inductive bound with residual degree $\delta - e$ to the coefficient
+slices. See DeMillo--Lipton, Schwartz, and Zippel.
+\end{proof}
+
+\begin{lemma}[Avoidance]\label{lem:avoid}
+Let $L$ be a rank-$d$ lattice of covolume $U$, $d \ge 2$, with a basis bounded as in
+Lemma~\ref{lem:basis}. Let $g_1,\dots,g_N \in \R[x_1,\dots,x_d]$ have total degree
+$\le \delta$, and suppose no $g_j$ vanishes identically on $L$. Then there is a
+nonzero $v \in L$ with $g_j(v) \ne 0$ for every $j$ and
+\[
+  \norm{v}_\infty \;\le\; \big(N\delta + 1\big)\, d\, C_1(d)\, U^{1/d}.
+\]
+\end{lemma}
+
+\begin{proof}
+Set $N' = \lceil N\delta + 1\rceil$ and consider the coefficient box
+$\{0,1,\dots,N'\}^d$, which has $(N'+1)^d$ tuples, of which $(N'+1)^d - 1$ are nonzero.
+Fix $j$. Because $g_j$ does not vanish identically on $L$, the composition
+$g_j \circ v$ is not identically zero on $\Z^d$; in particular we may assume it is not
+identically zero on the box (if it were, enlarge $N'$ by the finite amount needed to
+witness a non-root, which exists since $g_j \circ v \not\equiv 0$). By
+Lemma~\ref{lem:sz}, $g_j \circ v$ vanishes on at most $\delta (N'+1)^{d-1}$ tuples.
+By the union bound, the number of tuples killed by \emph{some} $g_j$ is at most
+$N \delta (N'+1)^{d-1}$. Since $N$ and $\delta$ are integers, $N' = N\delta + 1$
+exactly, so $N' + 1 - N\delta = 2$; hence the number of surviving nonzero tuples is
+\emph{exactly}
+\[
+  \big[(N'+1)^d - 1\big] - N\delta (N'+1)^{d-1}
+  \;=\; (N'+1)^{d-1}\big[(N'+1) - N\delta\big] - 1
+  \;=\; 2\,(N'+1)^{d-1} - 1,
+\]
+which for $d \ge 2$, $N,\delta \ge 1$ (whence $N'+1 \ge 3$) is at least
+$2\cdot 3^{\,d-1} - 1 \ge 5 > 0$. Any surviving tuple $c^\ast \ne 0$ yields
+$v = v(c^\ast) \ne 0$ with $g_j(v) \ne 0$ for all $j$ and, by the coefficient bound
+following Lemma~\ref{lem:basis},
+$\norm{v}_\infty \le d\,N'\,C_1(d)\,U^{1/d} \le (N\delta+1)\,d\,C_1(d)\,U^{1/d}$.
+\end{proof}
+
+\begin{remark}[Slack in the count]\label{rem:slack}
+The proof produces not one good tuple but at least $2(N'+1)^{d-1} - 1$, since the
+bracket $(N'+1) - N\delta$ equals $2$ identically rather than the $\ge 1$ that
+existence requires. This is a genuine factor-of-$2$ margin in the union-bound count,
+and the true margin is larger still: when the forbidden zero sets share parallel
+components across different $g_j$, their bad tuples overlap and the union bound
+overcounts the damage, so the number of survivors strictly exceeds
+$2(N'+1)^{d-1} - 1$ in those cases. Direct enumeration confirms both the exact count
+in the disjoint case and the surplus under overlap (Section~\ref{sec:verify}). None
+of this changes the conclusion --- a single good tuple already suffices --- but it
+shows the box side $N' = N\delta + 1$ is chosen with room to spare, and could be
+shrunk if a sharper height were the goal.
+\end{remark}
+
+\section{Specializations and sharpness}
+
+\begin{corollary}[Affine hyperplanes are free]\label{cor:affine}
+Let $H_1,\dots,H_N$ be affine hyperplanes $H_j = \{x : \ell_j(x) = a_j\}$ with each
+linear functional $\ell_j \ne 0$ not vanishing identically on $L$. Then there is a
+nonzero $v \in L$ off every $H_j$ with
+$\norm{v}_\infty \le (N+1)\,d\,C_1(d)\,U^{1/d}$.
+\end{corollary}
+
+\begin{proof}
+Apply Lemma~\ref{lem:avoid} with $\delta = 1$ and $g_j(x) = \ell_j(x) - a_j$. Degree
+$1$ gives $N' = N + 1$ and the stated bound.
+\end{proof}
+
+\begin{remark}[The through-origin hypothesis is never load-bearing]
+The classical statement takes hyperplanes through the origin ($a_j = 0$). The proof
+of Lemma~\ref{lem:avoid} never uses $a_j = 0$: the count of bad tuples for a single
+constraint depends only on the degree of $g_j \circ v$, not on its constant term.
+A nonconstant affine function of the coefficients hits any prescribed value at most
+once along each coordinate line, whether that value is $0$ or not. The origin case is
+in fact very slightly \emph{worse} for counting, not better: when $H_j$ passes through
+the origin, the tuple $c = 0$ is one of its roots, so among nonzero tuples a
+through-origin hyperplane carries at most $(N+1)^{d-1} - 1$ bad points, whereas a
+generic affine hyperplane can carry the full $(N+1)^{d-1}$. This costs nothing in the
+conclusion.
+\end{remark}
+
+\begin{remark}[Lower-dimensional targets are easier]
+To force $v \notin V$ for a linear subspace $V$ of codimension $\ge 1$, it suffices to
+force $v$ off any single hyperplane $H \supseteq V$; avoiding a smaller set is never
+harder. Thus Corollary~\ref{cor:affine} subsumes avoidance of arbitrary
+positive-codimension affine subspaces at the same bound.
+\end{remark}
+
+\begin{proposition}[The degree factor is sharp]\label{prop:sharp}
+For every $\delta \ge 1$ there is a degree-$\delta$ polynomial $g$, not identically
+zero on $L$, whose zero set meets the box $\{0,\dots,N\}^d$ in exactly
+$\delta(N+1)^{d-1}$ tuples for all $N \ge \delta$. Hence the per-constraint bound of
+Lemma~\ref{lem:sz}, and with it the degree factor in Lemma~\ref{lem:avoid}, cannot be
+improved in general.
+\end{proposition}
+
+\begin{proof}
+Take $g(x) = \prod_{r=1}^{\delta}(\ell(x) - r)$ for a coordinate functional
+$\ell(v(c)) = c_1$ (available when the basis is the standard one; in general use any
+functional that is a nonzero integer combination of coordinates of $v(c)$). Its zero
+set is the union of the $\delta$ parallel affine hyperplanes $c_1 \in \{1,\dots,\delta\}$.
+For each of the $\delta$ admissible values of $c_1$ and each of the $(N+1)^{d-1}$ choices
+of the remaining coordinates, exactly one tuple lies on the zero set, and these are
+distinct, giving exactly $\delta(N+1)^{d-1}$ bad tuples.
+\end{proof}
+
+\subsection{A congruence specialization: CRT-prescribed residue patterns}
+
+The avoidance lemma is stated over $\R$, but its only inputs are a lattice, a bounded
+basis, and constraints that are polynomial in the basis coefficients. Congruence
+constraints fit this template, and combining Lemma~\ref{lem:avoid} with the Chinese
+Remainder Theorem yields a short lattice vector realizing a prescribed residue pattern
+across several coprime moduli. We record this because it is the setting from which the
+underlying construction originally arose, and because the correct hypothesis over
+\emph{prime-power} moduli is a genuine sharpening of the na\"ive one.
+
+\begin{corollary}[CRT residue realizability]\label{cor:crt}
+Let $U = \prod_{i=1}^{r} p_i^{e_i}$ with distinct primes $p_i$ and known factorization.
+Let $L$ be a rank-$d$ lattice with a bounded basis as in Lemma~\ref{lem:basis}, and for
+each $i$ let $\ell_i$ be an integer-linear coordinate functional that is \emph{primitive
+modulo $p_i$}, meaning its coefficient vector is not entirely divisible by $p_i$. For
+each $i$ prescribe either a target residue $a_i \in \Z/p_i^{e_i}\Z$ or a forbidden set
+$F_i \subsetneq \Z/p_i^{e_i}\Z$. Then there is a nonzero $v \in L$ realizing every local
+constraint simultaneously --- $\ell_i(v) \equiv a_i$, respectively $\ell_i(v) \notin F_i
+\pmod{p_i^{e_i}}$ --- with $\norm{v}_\infty \le C(d,r)\,U^{1/d}$.
+\end{corollary}
+
+\begin{proof}
+Primitivity modulo $p_i$ makes $\ell_i$ surject onto $\Z/p_i^{e_i}\Z$: a coefficient
+that is a unit modulo $p_i$ is a unit modulo $p_i^{e_i}$, so $\ell_i$ already attains
+every residue as its argument ranges over a complete set modulo $p_i^{e_i}$. Hence each
+local constraint is satisfiable --- the target $a_i$ is attained, and any $F_i \subsetneq
+\Z/p_i^{e_i}\Z$ leaves a nonempty admissible complement. Since the $p_i^{e_i}$ are
+pairwise coprime, the Chinese Remainder Theorem assembles the local admissible classes
+into a single admissible union of residue classes modulo $U$; realizing it is a system
+of congruences on $v$, i.e.\ the condition that $v$ lie in a prescribed union of cosets
+of the congruence sublattice $L_U = \{v \in L : \ell_i(v) \equiv 0 \ (p_i^{e_i})\
+\forall i\}$. When the $\ell_i$ read independent coordinates, $[L : L_U] = \prod_i
+p_i^{e_i} = U$, so $\covol(L_U) = U\,\covol(L)$. Each forbidden or off-target residue is
+an affine-congruence condition, hence a $\delta=1$ constraint in the sense of
+Corollary~\ref{cor:affine} once lifted to the integer basis of $L_U$; applying
+Lemma~\ref{lem:avoid} over $L_U$ produces a nonzero $v$ meeting all of them with
+$\norm{v}_\infty \le C(d,r)\,U^{1/d}$.
+\end{proof}
+
+\begin{remark}[Primitivity is the right hypothesis, and it is sharp]\label{rem:primitive}
+Over a prime modulus $\Z/p\Z$ --- a field --- ``nonzero functional'' suffices, exactly
+as in Corollary~\ref{cor:affine}. Over a \emph{prime power} $\Z/p^e\Z$ with $e \ge 2$
+this fails: the ring has zero divisors, and a functional that is nonzero modulo $p^e$
+but has all coefficients divisible by $p$ is \emph{not} surjective. Its image is the
+subgroup of multiples of $p$, of size $p^{e-1}$ rather than $p^e$, so residues outside
+$p\Z/p^e\Z$ are unreachable. Direct enumeration confirms the collapse: $2x_0 \bmod 4$
+has image $\{0,2\}$ (index $2$, not $4$), and $3x_0 \bmod 9$ has image $\{0,3,6\}$
+(index $3$, not $9$); whereas the primitive $3x_0 + 2x_1 \bmod 8$, with $3$ a unit,
+surjects (index $8$). The correct hypothesis is therefore primitivity modulo $p_i$, not
+mere nonvanishing modulo $p_i^{e_i}$ --- the prime-power analogue of the ``$\ell_j \ne
+0$ on $L$'' condition of Lemma~\ref{lem:avoid}. This is also what keeps the specialization
+honest about its scope: the reassembly across moduli is the Chinese Remainder Theorem,
+used as stated; the content contributed here is the height bound on the realizing vector
+together with the sharp local hypothesis. The general composite-modulus problem without
+a known factorization is harder and, for higher degree, is only settled in the
+multilinear regime (B\"unz--Fisch); here the factorization of $U$ is given, which is
+what makes the clean local-to-global passage available.
+\end{remark}
+
+\section{Verification}\label{sec:verify}
+
+Every finite core above was checked by exhaustive enumeration over the coefficient box
+with the standard basis $v_i = e_i$ in dimension $d = 3$; the counts reported are exact.
+
+\medskip
+\noindent\textbf{Affine, $\delta = 1$ ($d=3$, $N=2$; box has $26$ nonzero tuples).}
+The through-origin hyperplane $\{c_1 = 0\}$ carries $8$ bad nonzero tuples, matching
+$(N+1)^{d-1} - 1 = 8$; its affine shift $\{c_1 = 1\}$ carries $9 = (N+1)^{d-1}$. The
+adversarial functional $\{c_3 = 0\}$, which vanishes on two of the three basis vectors,
+also carries exactly $8$, confirming that a constraint vanishing on part of the basis is
+still controlled through the remaining coordinate. A generic affine plane
+$\{c_1 + c_2 + c_3 = 3\}$ carries $7$. All are $\le (N+1)^{d-1} = 9$.
+
+\medskip
+\noindent\textbf{Degree $\delta = 2$ ($d=3$, $N=2$; per-constraint budget
+$\delta(N+1)^{d-1} = 18$).} Irreducible conics are far from tight
+($c_1^2 - c_2$: $5$ bad; $c_1 c_2 - 1$: $3$; $c_1^2 + c_2^2 - c_3$: $3$). The reducible
+extremal cases saturate: $c_3(c_3 - 1)$ (two parallel planes) gives $17$, and
+$(c_1 - 1)(c_1 - 2)$ gives exactly $18$, meeting the bound with equality and confirming
+Proposition~\ref{prop:sharp}.
+
+\medskip
+\noindent\textbf{Sharpness across scale.} For the extremal $g = (c_1-1)(c_1-2)$ with
+$d = 3$, direct enumeration gives bad-tuple counts $18, 32, 50, 72, 162$ at
+$N = 2,3,4,5,8$, each equal to $2(N+1)^2$ on the nose, while the surviving-tuple count
+$(N+1)^3 - 1 - 2(N+1)^2$ equals $8, 31, 74, 143, 566$ respectively --- strictly positive
+throughout, as Lemma~\ref{lem:avoid} guarantees.
+
+\medskip
+\noindent\textbf{Survivor count and slack (Remark~\ref{rem:slack}).} Under the
+lemma's own construction $N' = N\delta + 1$, the number of good nonzero tuples was
+enumerated directly. In the disjoint case it equals $2(N'+1)^{d-1} - 1$ exactly:
+for $(N,\delta,d) = (1,1,2)$ this is $5$; for $(1,1,3)$, $17$; for $(2,1,3)$ and
+$(1,2,3)$, $31$; for $(2,2,3)$, $71$. When forbidden components overlap across
+constraints the survivor count is strictly larger --- e.g.\ $(2,1,3)$ rises from the
+formula's $31$ to $35$, and $(2,2,3)$ from $71$ to $95$ under $\delta$ parallel planes
+per constraint --- confirming the union bound is conservative. In every case the
+minimum over admissible parameters is $5$, never the bare $1$ that existence needs.
+
+\medskip
+\noindent\textbf{Congruence specialization (Corollary~\ref{cor:crt},
+Remark~\ref{rem:primitive}).} The index of the congruence sublattice and the
+primitivity trap were checked by direct enumeration. For independent coordinates with
+coprime moduli $(4,9)$, the congruence sublattice of $\Z^2$ has index $36 = 4\cdot 9$,
+the full CRT value. The non-primitive functionals collapse as predicted: $2x_0 \bmod 4$
+has image size $2$ and $3x_0 \bmod 9$ has image size $3$, so neither surjects, while the
+primitive $3x_0 + 2x_1 \bmod 8$ has image size $8$ and does. These confirm both the
+covolume identity $\covol(L_U) = U\,\covol(L)$ used in the corollary and the necessity
+of the primitivity hypothesis.
+
+\section{Discussion}
+
+The value of this note is not a new bound but a proof one can hand to a non-specialist
+and a machine at the same time. The successive-minima route gives sharper constants;
+the box-counting route gives a statement whose every quantity is a finite integer count
+and whose hypotheses reduce to ``the constraints are not identically satisfied.'' In
+settings where one needs a short lattice vector in general position --- off a singular
+locus, off a low-rank configuration, off a prescribed union of forbidden patterns --- and
+cares more about a checkable existence certificate than about optimal height, this
+elementary packaging may be the more convenient one to reproduce inline. The
+affine-is-free and degree factor observations delimit what the box count costs: nothing
+for affine shifts, and a factor of $\delta$ for degree --- the latter being, as
+\cite{fuk2010} already establishes, exactly the optimal dependence and no artifact of the
+crude method.
+
+\begin{thebibliography}{9}
+\bibitem{fuk2010} L. Fukshansky, Algebraic points of small height missing a union of
+varieties, \emph{J.~Number Theory} \textbf{130} (2010), no.~10, 2099--2118.
+\bibitem{alon} N. Alon, Combinatorial Nullstellensatz, \emph{Combin. Probab. Comput.}
+\textbf{8} (1999), no.~1--2, 7--29.
+\bibitem{fukjeong} L. Fukshansky and S. Jeong, Diophantine avoidance and small-height
+primitive elements in ideals of number fields, arXiv:2312.10853 (2023).
+\bibitem{cassels} J.\,W.\,S. Cassels, \emph{An Introduction to the Geometry of Numbers},
+Springer, 1959 (Ch.~VIII, reduction theory).
+\bibitem{schwartz} J.\,T. Schwartz, Fast probabilistic algorithms for verification of
+polynomial identities, \emph{J.~ACM} \textbf{27} (1980), 701--717.
+\bibitem{zippel} R. Zippel, Probabilistic algorithms for sparse polynomials,
+\emph{EUROSAM} 1979, 216--226.
+\bibitem{bunzfisch} B. B\"unz and B. Fisch, Multilinear Schwartz--Zippel mod $N$
+and lattice-based succinct arguments, IACR ePrint 2022/458 (2022).
+\bibitem{minkowski} H. Minkowski, \emph{Geometrie der Zahlen}, Teubner, 1910 (first and
+second theorems).
+\end{thebibliography}
+
+\end{document}
